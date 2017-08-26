@@ -28,11 +28,14 @@ public abstract class ShareIntent {
         this.getIntent().setType("text/plain");
     }
     public void open(ReadableMap options) throws ActivityNotFoundException {
+        if (ShareIntent.hasValidKey("email", options) ) {
+          this.setIntent(new Intent(android.content.Intent.ACTION_SENDTO));
+          this.getIntent().setType("text/plain");
+          this.getIntent().setData(android.net.Uri.parse("mailto:"));
+          this.getIntent().putExtra(Intent.EXTRA_EMAIL, new String[] { options.getString("email") });
+        }
         if (ShareIntent.hasValidKey("subject", options) ) {
             this.getIntent().putExtra(Intent.EXTRA_SUBJECT, options.getString("subject"));
-        }
-        if (ShareIntent.hasValidKey("email", options) ) {
-            this.getIntent().putExtra(Intent.EXTRA_EMAIL, new String[] { options.getString("email") });
         }
         if (ShareIntent.hasValidKey("message", options) && ShareIntent.hasValidKey("url", options)) {
             ShareFile fileShare = getFileShare(options);
