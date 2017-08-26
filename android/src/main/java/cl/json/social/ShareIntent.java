@@ -56,7 +56,11 @@ public abstract class ShareIntent {
                 this.getIntent().putExtra(Intent.EXTRA_TEXT, options.getString("url"));
             }
         } else if (ShareIntent.hasValidKey("message", options) ) {
-            this.getIntent().putExtra(Intent.EXTRA_TEXT, options.getString("message"));
+            if(ShareIntent.hasValidKey("email", options)) {
+              this.getIntent().putExtra(Intent.EXTRA_TEXT, android.text.Html.fromHtml(options.getString("message")));
+            } else {
+              this.getIntent().putExtra(Intent.EXTRA_TEXT, options.getString("message"));
+            }
         }
     }
     protected ShareFile getFileShare(ReadableMap options) {
